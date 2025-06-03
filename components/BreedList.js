@@ -1,9 +1,14 @@
 import React from 'react';
 import { View, Text, ActivityIndicator, FlatList, StyleSheet } from 'react-native';
-import { useBreeds } from '../hooks/useDogApi';
+import { useQuery } from '@tanstack/react-query';
+import { DogAPI } from '../api/dogApi';
 
 export default function BreedList() {
-  const { data, isPending, isError, isSuccess } = useBreeds();
+  const { data, isPending, isError, isSuccess } = useQuery(
+    ['breeds'],  // Key for the query
+    () => DogAPI.getBreeds(),  // Function to fetch data
+    { enabled: true }  // Options
+  );
 
   if (isPending) return <ActivityIndicator />;
   if (isError) return <Text style={styles.errorText}>Error fetching breeds.</Text>;

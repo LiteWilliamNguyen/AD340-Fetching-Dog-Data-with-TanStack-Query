@@ -10,7 +10,8 @@ export const DogAPI = {
   getBreeds: async () => (await dogApi.get('/breeds')).data,
 
   // Fetches details of a specific breed by its ID
-  getBreedById: async ({ id }) => {
+  getBreedById: async (options) => {
+    const { id } = options;
     const { data } = await dogApi.get(`/breeds/${id}`);
     return data;
   },
@@ -21,3 +22,4 @@ export const DogAPI = {
   // Fetches a list of dog groups
   getGroups: async () => (await dogApi.get('/groups')).data,
 };
+

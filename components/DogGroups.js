@@ -6,7 +6,7 @@ export default function DogGroups() {
   const { data, isPending, isError, isSuccess } = useDogGroups();
 
   if (isPending) return <ActivityIndicator />;
-  if (isError) return <Text>Error fetching groups.</Text>;
+  if (isError) return <Text style={styles.errorText}>Error fetching groups.</Text>;
 
   return (
     <View style={styles.container}>
@@ -25,6 +25,7 @@ export default function DogGroups() {
     </View>
   );
 }
+
 const styles = StyleSheet.create({
   container: {
     padding: 20,

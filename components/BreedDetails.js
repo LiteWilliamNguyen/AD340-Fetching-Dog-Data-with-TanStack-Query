@@ -1,57 +1,46 @@
 import React from 'react';
 import { View, Text, ActivityIndicator, StyleSheet } from 'react-native';
-import { useBreedById } from '../hooks/useDogApi';
-import { FlatList } from 'react-native-web';
+import { useQuery } from '@tanstack/react-query';
+import { DogAPI } from '../api/dogApi';
 
 export default function BreedDetails({ id }) {
-  const { data, isPending, isError, isSuccess } = useBreedById({ id });
+  const { data, error, isLoading, isError } = useQuery(
+    { queryKey: ['breed', id], queryFn: () => DogAPI.getBreedById({ id }) },
+  );
 
-  if (isPending) return <ActivityIndicator />;
+  if (isLoading) return <ActivityIndicator />;
   if (isError) return <Text style={styles.errorText}>Error fetching breed details.</Text>;
 
-  const breed = isSuccess ? data.data.attributes : {};
+  const breed = data?.data?.attributes || {};
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Dog Breeds: {breed.name}</Text>
-      {isSuccess && (
+      {data && (
         <FlatList
-          data={data.data.attributes}
-          renderItem={({ item }) => (
-            // Render breed details
-            <View style={styles.breedItem}>
-              <Text style={styles.breedName}>{`${item.attributes.name}`}</Text>
-              <Text style={styles.description}>{breed.description}</Text>
-              
-              {/* Life Expectancy */}
-              <View style={styles.breedInfoContainer}>
-                <Text style={styles.label}>Life Expectancy:</Text>
-                <Text style={styles.value}>{breed.life?.min} - {breed.life?.max} years</Text>
+          data={Object.entries(breed)}
+          renderItem={({ item }) => {
+            const [key, value] = item;
+            return (
+              <View style={styles.breedItem}>
+                <Text style={styles.breedName}>{key}</Text>
+                {key === 'description' ? (
+                  <Text style={styles.description}>{value}</Text>
+                ) : (
+                  <Text style={styles.value}>
+                    {typeof value === 'object'
+                      ? `${value.min} - ${value.max}`
+                      : value
+                        ? 'Yes'
+                        : 'No'}
+                  </Text>
+                )}
               </View>
-              
-              {/* Male Weight */}
-              <View style={styles.breedInfoContainer}>
-                <Text style={styles.label}>Male Weight:</Text>
-                <Text style={styles.value}>{breed.male_weight?.min} - {breed.male_weight?.max} kg</Text>
-              </View>
-              
-              {/* Female Weight */}
-              <View style={styles.breedInfoContainer}>
-                <Text style={styles.label}>Female Weight:</Text>
-                <Text style={styles.value}>{breed.female_weight?.min} - {breed.female_weight?.max} kg</Text>
-              </View>
-              
-              {/* Hypoallergenic */}
-              <View style={styles.breedInfoContainer}>
-                <Text style={styles.label}>Hypoallergenic:</Text>
-                <Text style={styles.value}>{breed.hypoallergenic ? 'Yes' : 'No'}</Text>
-              </View>
-            </View>
-          )}
-          keyExtractor={(item) => item.id}
-          />
-          )}
-          
+            );
+          }}
+          keyExtractor={(item) => item[0]}
+        />
+      )}
     </View>
   );
 }
@@ -96,5 +85,5 @@ const styles = StyleSheet.create({
     color: 'red',
     textAlign: 'center',
   },
-  
 });
+

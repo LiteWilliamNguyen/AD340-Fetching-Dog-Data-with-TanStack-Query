@@ -1,11 +1,15 @@
 import React from 'react';
 import { View, Text, ActivityIndicator, StyleSheet, FlatList } from 'react-native';
-import { useDogFacts } from '../hooks/useDogApi';
+import { useQuery } from '@tanstack/react-query';
+import { DogAPI } from '../api/dogApi';
 
 export default function DogFacts() {
-  const { data, isPending, isError, isSuccess } = useDogFacts();
+  const { data, isLoading, isError, isSuccess } = useQuery({
+    queryKey: ['dog-facts'],
+    queryFn: DogAPI.getFacts
+  });
 
-  if (isPending) return <ActivityIndicator />;
+  if (isLoading) return <ActivityIndicator />;
   if (isError) return <Text>Error fetching facts.</Text>;
 
   return (
