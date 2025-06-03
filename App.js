@@ -1,20 +1,25 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+// App.js
+import React from 'react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ScrollView } from 'react-native';
+import BreedList from './components/BreedList';
+import BreedDetails from './components/BreedDetails';
+import DogFacts from './components/DogFacts';
+import DogGroups from './components/DogGroups';
+
+const queryClient = new QueryClient();
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <QueryClientProvider client={queryClient}>
+        <ScrollView>
+          <BreedList />
+          <BreedDetails/>
+          <DogFacts />
+          <DogGroups />
+        </ScrollView>
+    </QueryClientProvider>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+
