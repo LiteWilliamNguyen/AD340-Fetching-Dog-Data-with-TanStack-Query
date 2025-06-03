@@ -4,11 +4,12 @@ import { useQuery } from '@tanstack/react-query';
 import { DogAPI } from '../api/dogApi';
 
 export default function BreedList() {
-  const { data, isPending, isError, isSuccess } = useQuery(
-    ['breeds'],  // Key for the query
-    () => DogAPI.getBreeds(),  // Function to fetch data
-    { enabled: true }  // Options
-  );
+  const { data, isPending, isError, isSuccess } = useQuery({
+  queryKey: ['breeds'],
+  queryFn: DogAPI.getBreeds,
+  enabled: true,
+});
+
 
   if (isPending) return <ActivityIndicator />;
   if (isError) return <Text style={styles.errorText}>Error fetching breeds.</Text>;

@@ -1,12 +1,14 @@
 import React from 'react';
-import { View, Text, ActivityIndicator, StyleSheet } from 'react-native';
+import { View, Text, ActivityIndicator, StyleSheet, FlatList } from 'react-native';
 import { useQuery } from '@tanstack/react-query';
 import { DogAPI } from '../api/dogApi';
 
 export default function BreedDetails({ id }) {
-  const { data, error, isLoading, isError } = useQuery(
-    { queryKey: ['breed', id], queryFn: () => DogAPI.getBreedById({ id }) },
-  );
+  const { data, error, isLoading, isError } = useQuery({
+  queryKey: ['breed', id],
+  queryFn: () => DogAPI.getBreedById({ id }),
+});
+
 
   if (isLoading) return <ActivityIndicator />;
   if (isError) return <Text style={styles.errorText}>Error fetching breed details.</Text>;
