@@ -2,12 +2,18 @@ import React from 'react';
 import { View, Text, ActivityIndicator, StyleSheet, FlatList } from 'react-native';
 import { useDogGroups } from '../hooks/useDogApi';
 
+// Displays a list of dog groups, fetched from the Dog API
 export default function DogGroups() {
+  // Fetch the list of dog groups using the useDogGroups hook
   const { data, isPending, isError, isSuccess } = useDogGroups();
 
+  // If the data is still being fetched, display an activity indicator
   if (isPending) return <ActivityIndicator />;
+
+  // If there was an error fetching the data, display an error message
   if (isError) return <Text style={styles.errorText}>Error fetching groups.</Text>;
 
+  // If the data was successfully fetched, display it in a FlatList
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Dog Groups:</Text>
@@ -16,6 +22,7 @@ export default function DogGroups() {
           data={data.data}
           renderItem={({ item }) => (
             <View style={styles.factItem}>
+              {/* display each group name in a separate item, with a bullet point */}
               <Text style={styles.factText} key={item.id}>• {item.attributes.name}</Text>
             </View>
           )}

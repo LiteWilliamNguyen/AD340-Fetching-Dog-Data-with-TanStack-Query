@@ -3,14 +3,15 @@ import { View, Text, ActivityIndicator, StyleSheet, FlatList } from 'react-nativ
 import { useQuery } from '@tanstack/react-query';
 import { DogAPI } from '../api/dogApi';
 
+// This component displays a list of dog facts
 export default function DogFacts() {
   const { data, isLoading, isError, isSuccess } = useQuery({
     queryKey: ['dog-facts'],
     queryFn: DogAPI.getFacts
   });
 
-  if (isLoading) return <ActivityIndicator />;
-  if (isError) return <Text>Error fetching facts.</Text>;
+  if (isLoading) return <ActivityIndicator />; // Show a spinner while data is loading
+  if (isError) return <Text>Error fetching facts.</Text>; // Show an error message if the data fetch fails
 
   return (
     <View style={styles.container}>
@@ -23,7 +24,7 @@ export default function DogFacts() {
               <Text style={styles.factText}>• {item.attributes.body}</Text>
             </View>
           )}
-          keyExtractor={(item, index) => index.toString()}
+          keyExtractor={(item, index) => index.toString()} // The data items don't have an id, so use an index to key them
         />
       )}
     </View>
